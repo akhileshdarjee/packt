@@ -35,3 +35,12 @@ Now, you've completed the configuration step :v:
 8. Hit the URL: http://localhost:8081  
   
 Enjoy...!!! :thumbsup:
+
+
+## Resources:
+
+1. Website Theme (Aviato)
+https://themefisher.com/products/aviato-e-commerce-template/
+
+2. Favicons
+https://realfavicongenerator.net/

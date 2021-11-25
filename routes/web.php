@@ -15,6 +15,10 @@ use App\Http\Controllers\WebsiteController;
 */
 
 Route::get('/', [WebsiteController::class, 'index'])->name('index');
+Route::get('/about', [WebsiteController::class, 'about'])->name('about');
+Route::get('/contact', [WebsiteController::class, 'contact'])->name('contact');
 Route::get('/products', [WebsiteController::class, 'products'])->name('products');
 Route::get('/product/{id}', [WebsiteController::class, 'singleProduct'])->name('single.product');
-Route::get('/product/{id}/image/{size?}', [WebsiteController::class, 'productImage'])->name('product.image');
+Route::get('/product/{id}/image/{size?}', [WebsiteController::class, 'getProductImage'])->name('product.image');
+Route::get('/latest-products', [WebsiteController::class, 'latestProducts'])->name('latest.products');
+Route::post('/set-default-currency', [WebsiteController::class, 'setDefaultCurrency'])->name('default.currency');
