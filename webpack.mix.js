@@ -24,9 +24,9 @@ mix.styles([
 mix.scripts([
     'resources/plugins/jquery/dist/jquery.min.js',
     'resources/plugins/bootstrap/js/bootstrap.min.js',
-    'resources/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js',
-    'resources/plugins/instafeed/instafeed.min.js',
-    'resources/plugins/ekko-lightbox/dist/ekko-lightbox.min.js',
+    // 'resources/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js',
+    // 'resources/plugins/instafeed/instafeed.min.js',
+    // 'resources/plugins/ekko-lightbox/dist/ekko-lightbox.min.js',
     'resources/plugins/slick/slick.min.js',
     'resources/plugins/slick/slick-animation.min.js',
     'resources/js/website/script.js',
@@ -36,3 +36,12 @@ mix.scripts([
 mix.scripts([
     'resources/js/website/index.js',
 ], 'public/js/website/index.js').version();
+
+mix.scripts([
+    'resources/js/website/product.js',
+], 'public/js/website/product.js').version();
+
+
+mix.scripts([
+    'resources/js/website/contact.js',
+], 'public/js/website/contact.js').version();

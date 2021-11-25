@@ -23,8 +23,9 @@
             <div class="row products-container" data-action="{{ \Request::fullUrl() }}"></div>
             <div class="not-found" style="display: none;">
                 <div class="block text-center">
-                    <i class="tf-ion-alert-circled"></i>
+                    <i class="tf-ion-alert-circled fs-50"></i>
                     <h2 class="text-center">No products found</h2>
+                    <a href="{{ \Request::fullUrl() }}" class="btn btn-main mt-20 fs-14">Try Again</a>
                 </div>
             </div>
             <div class="products-loader text-center">

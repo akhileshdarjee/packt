@@ -24,11 +24,14 @@
                 </div>
             </div>
             <div class="row products-container" data-action="{{ route('latest.products') }}"></div>
+            <div class="block text-center show-products" style="display: none;">
+                <a href="{{ route('products') }}" class="btn btn-main mt-20 fs-14">Show all Products</a>
+            </div>
             <div class="not-found" style="display: none;">
                 <div class="block text-center">
-                    <i class="tf-ion-alert-circled" style="font-size: 50px;"></i>
+                    <i class="tf-ion-alert-circled fs-50"></i>
                     <h2 class="text-center">No products found</h2>
-                    <a href="{{ route('products') }}" class="btn btn-main mt-20">Continue Shopping</a>
+                    <a href="{{ route('products') }}" class="btn btn-main mt-20 fs-14">Continue Shopping</a>
                 </div>
             </div>
             <div class="products-loader text-center">

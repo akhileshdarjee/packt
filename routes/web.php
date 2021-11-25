@@ -22,3 +22,5 @@ Route::get('/product/{id}', [WebsiteController::class, 'singleProduct'])->name('
 Route::get('/product/{id}/image/{size?}', [WebsiteController::class, 'getProductImage'])->name('product.image');
 Route::get('/latest-products', [WebsiteController::class, 'latestProducts'])->name('latest.products');
 Route::post('/set-default-currency', [WebsiteController::class, 'setDefaultCurrency'])->name('default.currency');
+Route::post('/subscribe', [WebsiteController::class, 'subscribe'])->name('subscribe');
+Route::post('/save-contact', [WebsiteController::class, 'saveContact'])->name('save.contact');

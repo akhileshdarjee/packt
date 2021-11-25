@@ -23,27 +23,25 @@
             <div class="container">
                 <div class="row">
                     <div class="contact-form col-md-6 col-md-offset-3">
-                        <form id="contact-form" method="post" action="" role="form">
+                        <form id="contact-form" data-action="{{ route('save.contact') }}" role="form">
                             <div class="form-group">
-                                <input type="text" placeholder="Your Name" class="form-control" name="name" id="name">
-                            </div>
-                            <div class="form-group">
-                                <input type="email" placeholder="Your Email" class="form-control" name="email" id="email">
+                                <input type="text" placeholder="Your Name" class="form-control" name="name">
                             </div>
                             <div class="form-group">
-                                <input type="text" placeholder="Subject" class="form-control" name="subject" id="subject">
+                                <input type="email" placeholder="Your Email" class="form-control" name="email">
                             </div>
                             <div class="form-group">
-                                <textarea rows="6" placeholder="Message" class="form-control" name="message" id="message"></textarea>   
+                                <input type="text" placeholder="Subject" class="form-control" name="subject">
                             </div>
-                            <div id="mail-success" class="success">
-                                Thank you. The Mailman is on His Way :)
+                            <div class="form-group">
+                                <textarea rows="6" placeholder="Message" class="form-control" name="message"></textarea>
                             </div>
-                            <div id="mail-fail" class="error">
-                                Sorry, don't know what happened. Try later :(
-                            </div>
+                            <div id="contact-success" class="success"></div>
+                            <div id="contact-fail" class="error"></div>
                             <div id="cf-submit">
-                                <input type="submit" id="contact-submit" class="btn btn-transparent" value="Submit">
+                                <button class="btn btn-main btn-block save-contact fs-14" type="button">
+                                    Submit
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -52,3 +50,7 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script type="text/javascript" src="{{ asset(mix('js/website/contact.js')) }}"></script>
+@endpush

@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Str;
 use Exception;
+use Validator;
+use Carbon\Carbon;
 use GuzzleHttp\Promise;
 use GuzzleHttp\Client;
+use App\Models\Subscription;
+use App\Models\Contact;
 use Illuminate\Http\Request;
 
 class WebsiteController extends Controller
@@ -158,8 +163,6 @@ class WebsiteController extends Controller
                     $per_page = intval($request->get('per_page'));
                 }
 
-                logger($page);
-                logger($per_page);
                 $products = $this->getProducts($page, $per_page, true);
 
                 $data = [
@@ -179,46 +182,168 @@ class WebsiteController extends Controller
 
     public function singleProduct(Request $request, $id)
     {
-        $data = [
-            'data' => [],
-            'success' => false,
-            'message' => 'Oops! Something went wrong. Please try again'
-        ];
-
-        $apiKey = config('services.packt.token');
-
-        if ($apiKey) {
-            $headers = [
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Content-Type' => 'application/json'
+        if ($request->ajax()) {
+            $data = [
+                'data' => [],
+                'success' => false,
+                'message' => 'Oops! Something went wrong. Please try again'
             ];
 
-            try {
-                $client = new Client();
-                $request = $client->get('https://api.packt.com/api/v1/products/' . $id, [
-                    'headers' => $headers
-                ]);
+            $apiKey = config('services.packt.token');
 
-                $response = json_decode($request->getBody(), true);
+            if ($apiKey) {
+                $headers = [
+                    'Authorization' => 'Bearer ' . $apiKey,
+                    'Content-Type' => 'application/json'
+                ];
 
-                if (isset($response->errorMessage) && $response->errorMessage) {
-                    $data['message'] = $response->errorMessage;
-                } else {
-                    $data = [
-                        'data' => $response,
-                        'success' => true,
-                        'message' => 'Success'
-                    ];
+                try {
+                    $image = null;
+                    $prices = [];
+                    $product = null;
+                    $currency = session('defaultCurrency');
+                    $currencySymbol = $this->getCurrencySymbol($currency);
+                    $promises = [];
+                    $client = new Client();
+
+                    $promises['product'] = $client->getAsync('https://api.packt.com/api/v1/products/' . $id, [
+                        'headers' => $headers
+                    ]);
+
+                    $promises['price'] = $client->getAsync('https://api.packt.com/api/v1/products/' . $id . '/price/' . $currency, [
+                        'headers' => $headers
+                    ]);
+
+                    $promises['image'] = $client->getAsync('https://api.packt.com/api/v1/products/' . $id . '/cover/large', [
+                        'headers' => $headers
+                    ]);
+
+                    $responses = Promise\settle($promises)->wait();
+
+                    foreach ($responses as $key => $response) {
+                        //response state is either 'fulfilled' or 'rejected'
+                        if ($response['state'] === 'rejected') {
+                            if ($key == 'product') {
+                                break;
+                            } else {
+                                continue;
+                            }
+                        }
+
+                        //$result is a Guzzle Response object
+                        $result = $response['value'];
+
+                        if ($key == 'product') {
+                            $result = json_decode($result->getBody());
+                            $product = $result;
+
+                            if (isset($product->product_type) && $product->product_type) {
+                                $product->product_type = Str::singular($product->product_type);
+
+                                if (isset($product->tagline) && $product->tagline) {
+                                    $product->tagline = strip_tags($product->tagline);
+                                }
+                                if (isset($product->learn) && $product->learn) {
+                                    $product->learn = strip_tags($product->learn);
+                                }
+                                if (isset($product->features) && $product->features) {
+                                    $product->features = strip_tags($product->features);
+                                }
+                                if (isset($product->description) && $product->description) {
+                                    $product->description = strip_tags($product->description);
+                                }
+                                if (isset($product->publication_date) && $product->publication_date) {
+                                    $publication_date = Carbon::parse($product->publication_date);
+                                    $product->publication_date = $publication_date->format('d-m-Y');
+                                }
+
+                                if (isset($product->authors) && $product->authors && count($product->authors)) {
+                                    foreach ($product->authors as $key => $author) {
+                                        $product->authors[$key]->about = strip_tags($author->about);
+                                    }
+                                }
+                            }
+                        } elseif ($key == 'price') {
+                            $result = json_decode($result->getBody());
+
+                            if (isset($result->prices) && $result->prices) {
+                                foreach ($result->prices as $type => $productPrice) {
+                                    $price = $currencySymbol . ' ' .$productPrice->{$currency};
+
+                                    if ($type == 'print') {
+                                        $priceDetails = [
+                                            'name' => 'Print',
+                                            'price' => $price,
+                                        ];
+
+                                        array_push($prices, $priceDetails);
+                                    } elseif ($type == 'ebook') {
+                                        $priceDetails = [
+                                            'name' => 'eBook',
+                                            'price' => $price
+                                        ];
+
+                                        array_push($prices, $priceDetails);
+                                    } elseif ($type == 'video') {
+                                        $priceDetails = [
+                                            'name' => 'Video',
+                                            'price' => $price
+                                        ];
+
+                                        array_push($prices, $priceDetails);
+                                    }
+                                }
+                            }
+                        } else {
+                            $image = $result->getBody()->getContents();
+                            $base64 = base64_encode($image);
+                            $mimeType = $result->getHeader('Content-Type')[0];
+                            $image = ('data:' . $mimeType . ';base64,' . $base64);
+                        }
+                    }
+
+                    if ($product) {
+                        if ($image) {
+                            $product->image = $image;
+                        }
+
+                        if ($prices) {
+                            if (isset($product->isbns) && $product->isbns) {
+                                foreach ($product->isbns as $type => $sku) {
+                                    foreach ($prices as $idx => $price) {
+                                        if (strtolower($price['name']) == $type) {
+                                            $prices[$idx]['buy_link'] = 'https://www.packtpub.com/buyitem/index/index/sku/' . $sku;
+                                        }
+                                    }
+                                }
+                            }
+
+                            $product->prices = $prices;
+                        }
+
+                        $data = [
+                            'data' => [
+                                'title' => $product->title . ' - Product - ' . config('app.name'),
+                                'product' => $product
+                            ],
+                            'success' => true,
+                            'message' => 'Success'
+                        ];
+                    } else {
+                        $data['message'] = 'Product not found';
+                    }
                 }
+                catch (Exception $e) {
+                   $data['message'] = $e->getMessage();
+                }
+            } else {
+                $data['message'] = 'Please set PACKT_API_TOKEN in .env';
             }
-            catch (Exception $e) {
-               $data['message'] = $e->getMessage();
-            }
-        } else {
-            $data['message'] = 'Please set PACKT_API_TOKEN in .env';
-        }
 
-        return response()->json($data, 200);
+            return response()->json($data, 200);
+        } else {
+            return view('website.layouts.product')->with(['productId' => $id]);
+        }
     }
 
     public function getProducts($page, $per_page, $full_response = false)
@@ -334,13 +459,15 @@ class WebsiteController extends Controller
         $products = array_values($products);
 
         if ($full_response) {
-            $products_response->products = $products;
-            $products = $products_response;
+            if (isset($products_response->products) && $products_response->products) {
+                $products_response->products = $products;
+                $products = $products_response;
 
-            foreach ($products as $key => $value) {
-                if (in_array($key, ['first_page_url', 'last_page_url', 'next_page_url', 'prev_page_url', 'path'])) {
-                    $products_route = route('products');
-                    $products->{$key} = str_replace('https://api.packt.com/api/v1/products', $products_route, $value);
+                foreach ($products as $key => $value) {
+                    if (in_array($key, ['first_page_url', 'last_page_url', 'next_page_url', 'prev_page_url', 'path'])) {
+                        $products_route = route('products');
+                        $products->{$key} = str_replace('https://api.packt.com/api/v1/products', $products_route, $value);
+                    }
                 }
             }
         }
@@ -482,5 +609,106 @@ class WebsiteController extends Controller
         }
 
         return $symbol;
+    }
+
+    public function subscribe(Request $request)
+    {
+        $data = [
+            'data' => [],
+            'success' => false,
+            'message' => 'Oops! Something went wrong. Please try again'
+        ];
+
+        if ($request->filled('email')) {
+            $email = trim($request->get('email'));
+
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $alreadySubscribed = Subscription::select('id', 'email')
+                    ->where('email', $email)
+                    ->first();
+
+                if ($alreadySubscribed) {
+                    $data['success'] = true;
+                    $data['message'] = 'You are already subscribed';
+                } else {
+                    $subscriptionData = [
+                        'email' => $email
+                    ];
+
+                    $created = Subscription::create($subscriptionData);
+
+                    if ($created) {
+                        $data = [
+                            'data' => $created,
+                            'success' => true,
+                            'message' => 'Yay! You have been added to the subscription list'
+                        ];
+                    }
+                }
+            } else {
+                $data['message'] = 'Please enter valid email address';
+            }
+        } else {
+            $data['message'] = 'Please enter valid email address';
+        }
+
+        return response()->json($data, 200);
+    }
+
+    public function validationsForContact($data)
+    {
+        $rules = [
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'subject' => 'required|string',
+            'message' => 'required|string'
+        ];
+
+        $messages = [
+            'name.required' => 'Please enter name',
+            'name.exists' => 'Name should be a string',
+            'email.required' => 'Please enter email',
+            'email.email' => 'Please enter valid email address',
+            'subject.required' => 'Please enter subject',
+            'subject.exists' => 'Subject should be a string',
+            'message.required' => 'Please enter message',
+            'message.exists' => 'Message should be a string',
+        ];
+
+        return Validator::make($data, $rules, $messages);
+    }
+
+    public function saveContact(Request $request)
+    {
+        $data = [
+            'data' => [],
+            'success' => false,
+            'message' => 'Oops! Something went wrong. Please try again'
+        ];
+
+        $validator = $this->validationsForContact($request->all());
+
+        if ($validator->fails()) {
+            $data['message'] = $validator->errors()->first();
+        } else {
+            $contactData = [
+                'name' => trim($request->get('name')),
+                'email' => trim($request->get('email')),
+                'subject' => trim($request->get('subject')),
+                'message' => trim($request->get('message'))
+            ];
+
+            $created = Contact::create($contactData);
+
+            if ($created) {
+                $data = [
+                    'data' => $created,
+                    'success' => true,
+                    'message' => 'Your message has been saved. We will contact you shortly'
+                ];
+            }
+        }
+
+        return response()->json($data, 200);
     }
 }

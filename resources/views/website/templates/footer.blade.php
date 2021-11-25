@@ -4,15 +4,19 @@
             <div class="col-md-12 text-center">
                 <div class="title">
                     <h2>SUBSCRIBE TO NEWSLETTER</h2>
-                    <p>Get updates to our latest products. WE WILL NEVER SPAM YOU</p>
+                    <p>Get updates to our latest products. We will never Spam you</p>
                 </div>
-                <div class="col-lg-6 col-md-offset-3">
-                    <div class="input-group subscription-form">
-                        <input type="text" class="form-control" placeholder="Enter Your Email Address">
+                <div class="col-lg-6 col-md-offset-3" id="subscription-form">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="subscription_email" placeholder="Enter Your Email Address">
                         <span class="input-group-btn">
-                            <button class="btn btn-main" type="button">Subscribe Now!</button>
+                            <button class="btn btn-main subscribe-email" type="button" data-action="{{ route('subscribe') }}">
+                                Subscribe Now
+                            </button>
                         </span>
                     </div>
+                    <div id="subscription-success" class="success"></div>
+                    <div id="subscription-fail" class="error"></div>
               </div>
             </div>
         </div>
@@ -76,3 +80,4 @@
         </div>
     </div>
 </footer>
+<div class="page-loader" style="display: none;"></div>

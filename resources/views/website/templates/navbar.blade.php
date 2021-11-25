@@ -3,12 +3,13 @@
         <div class="row">
             <div class="col-md-4 col-xs-12 col-sm-4">
                 <div class="contact-number">
-                    <i class="tf-ion-ios-telephone"></i>
-                    <span>0121 265 6484</span>
+                    <a href="tel:0121 265 6484">
+                        <i class="tf-ion-ios-telephone"></i>
+                        <span>0121 265 6484</span>
+                    </a>
                 </div>
             </div>
             <div class="col-md-4 col-xs-12 col-sm-4">
-                <!-- Site Logo -->
                 <div class="logo text-center">
                     <a href="{{ route('index') }}">
                         <img src="{{ asset('logo.png') }}" width="135" height="44">

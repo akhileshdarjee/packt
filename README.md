@@ -12,9 +12,13 @@
 
 4. `php artisan key:generate`
 
-5. Set '.env' variable -> ```PACKT_API_TOKEN="LjHaJEoAcYLbrjmswRuGWwcs2dKiizbqeFZ51jnw"```
+5. Set database credentials in '.env' file
 
-6. `composer dumpautoload -o`
+6. Set '.env' variable -> ```PACKT_API_TOKEN="LjHaJEoAcYLbrjmswRuGWwcs2dKiizbqeFZ51jnw"```
+
+7. `composer dumpautoload -o`
+
+8. `php artisan migrate`
   
   
 ## Permissions
@@ -30,9 +34,9 @@ sudo chmod -R ug+rw storage/
   
 Now, you've completed the configuration step :v:
 
-7. Serve it on your local server, `php artisan serve --port=8081`
+9. Serve it on your local server, `php artisan serve --port=8081`
   
-8. Hit the URL: http://localhost:8081  
+10. Hit the URL: http://localhost:8081  
   
 Enjoy...!!! :thumbsup:
 
