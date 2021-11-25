@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="https://www.packtpub.com/media/logo/stores/1/logo.png">
+    <img src="https://www.packtpub.com/media/logo/stores/1/logo.png" width="135" height="44">
 </div>
 
 ## Installation
@@ -44,3 +44,6 @@ https://themefisher.com/products/aviato-e-commerce-template/
 
 2. Favicons
 https://realfavicongenerator.net/
+
+3. Hero Slider Image (Pixabay)
+https://pixabay.com/
