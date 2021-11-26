@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="https://www.packtpub.com/media/logo/stores/1/logo.png" width="135" height="44">
+    <img src="/public/logo.png" width="135" height="44">
 </div>
 
 ## Installation
@@ -12,9 +12,9 @@
 
 4. `php artisan key:generate`
 
-5. Set database credentials in '.env' file
+5. Create database and set database credentials in '.env' file
 
-6. Set '.env' variable -> ```PACKT_API_TOKEN="LjHaJEoAcYLbrjmswRuGWwcs2dKiizbqeFZ51jnw"```
+6. Set Packt API token in '.env' -> ```PACKT_API_TOKEN="LjHaJEoAcYLbrjmswRuGWwcs2dKiizbqeFZ51jnw"```
 
 7. `composer dumpautoload -o`
 
