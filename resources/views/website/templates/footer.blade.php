@@ -4,7 +4,7 @@
             <div class="col-md-12 text-center">
                 <div class="title">
                     <h2>SUBSCRIBE TO NEWSLETTER</h2>
-                    <p>Get updates to our latest products. We will never Spam you</p>
+                    <p>Get updates to our latest products. We will never spam you</p>
                 </div>
                 <div class="col-lg-6 col-md-offset-3" id="subscription-form">
                     <div class="input-group">

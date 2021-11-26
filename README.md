@@ -2,23 +2,34 @@
     <img src="/public/logo.png" width="135" height="44">
 </div>
 
-## Installation
+## Technologies
+
+As per your requirement I've used latest version of following technologies
+
+1. Laravel 8.x
+
+2. PHP 8.0
   
-1. `git clone -b master https://github.com/akhileshdarjee/packt.git`
+  
+## Installation
 
-2. `composer install`
+1. `sudo apt install php8.0-curl php8.0-mysql libapache2-mod-php8.0 php8.0-mbstring php8.0-xml php8.0-opcache php8.0-gd php8.0-zip`
 
-3. `cp .env.example .env`
+2. `git clone -b master https://github.com/akhileshdarjee/packt.git`
 
-4. `php artisan key:generate`
+3. `composer install`
 
-5. Create database and set database credentials in '.env' file
+4. `cp .env.example .env`
 
-6. Set Packt API token in '.env' -> ```PACKT_API_TOKEN="LjHaJEoAcYLbrjmswRuGWwcs2dKiizbqeFZ51jnw"```
+5. `php artisan key:generate`
 
-7. `composer dumpautoload -o`
+6. Create database and set database credentials in '.env' file
 
-8. `php artisan migrate`
+7. Set Packt API token in '.env' -> ```PACKT_API_TOKEN="LjHaJEoAcYLbrjmswRuGWwcs2dKiizbqeFZ51jnw"```
+
+8. `composer dumpautoload -o`
+
+9. `php artisan migrate`
   
   
 ## Permissions
@@ -34,14 +45,14 @@ sudo chmod -R ug+rw storage/
   
 Now, you've completed the configuration step :v:
 
-9. Serve it on your local server, `php artisan serve --port=8081`
+10. Serve it on your local server, `php artisan serve --port=8081`
   
-10. Hit the URL: http://localhost:8081  
+11. Hit the URL: http://localhost:8081  
   
 Enjoy...!!! :thumbsup:
 
 
-## Resources:
+## Resources
 
 1. Website Theme (Aviato)
 https://themefisher.com/products/aviato-e-commerce-template/
