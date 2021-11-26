@@ -11,7 +11,7 @@
   
 ## Installation
 
-1. `sudo apt install php8.0-curl php8.0-mysql libapache2-mod-php8.0 php8.0-mbstring php8.0-xml php8.0-opcache php8.0-gd php8.0-zip`
+1. `sudo apt install php8.0 php8.0-curl php8.0-mysql libapache2-mod-php8.0 php8.0-mbstring php8.0-xml php8.0-opcache php8.0-gd php8.0-zip`
 
 2. `git clone -b master https://github.com/akhileshdarjee/packt.git`
 
