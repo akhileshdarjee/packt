@@ -4,8 +4,6 @@
 
 ## Technologies
 
-As per your requirement I've used latest version of following technologies
-
 1. Laravel 8.x
 
 2. PHP 8.0
