@@ -214,9 +214,9 @@ class WebsiteController extends Controller
                         'headers' => $headers
                     ]);
 
-                    $promises['image'] = $client->getAsync('https://api.packt.com/api/v1/products/' . $id . '/cover/large', [
-                        'headers' => $headers
-                    ]);
+                    // $promises['image'] = $client->getAsync('https://api.packt.com/api/v1/products/' . $id . '/cover/large', [
+                    //     'headers' => $headers
+                    // ]);
 
                     $responses = Promise\settle($promises)->wait();
 
@@ -391,9 +391,9 @@ class WebsiteController extends Controller
                                 'headers' => $headers
                             ]);
 
-                            $promises[$product->id . '_image'] = $client->getAsync('https://api.packt.com/api/v1/products/' . $product->id . '/cover/small', [
-                                'headers' => $headers
-                            ]);
+                            // $promises[$product->id . '_image'] = $client->getAsync('https://api.packt.com/api/v1/products/' . $product->id . '/cover/small', [
+                            //     'headers' => $headers
+                            // ]);
 
                             $products[$product->id] = $product;
                         }

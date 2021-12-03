@@ -148,8 +148,11 @@ function getProducts() {
 }
 
 function getProductBox(product) {
+    // if (!product.image) {
+    //     product.image = 'https://via.placeholder.com/240x300?text=Packt';
+    // }
     if (!product.image) {
-        product.image = 'https://via.placeholder.com/240x300?text=Packt';
+        product.image = 'https://static.packt-cdn.com/products/' + product.id + '/cover/smaller';
     }
 
     var product = '<div class="col-md-3 product-box">\

@@ -11,12 +11,13 @@ function showProductDetails() {
 
             if (data.success && typeof data.data.product !== 'undefined' && data.data.product) {
                 var product = data.data.product;
+                var product_image = product.image ? product.image : 'https://static.packt-cdn.com/products/' + product.id + '/cover/' + product.id + '-original.jpeg';
                 document.title = data.data.title;
 
                 $('body').find('.product-name').html(product.title);
                 $('body').find('.product-description').html(product.description);
                 $('body').find('.product-buy-link').attr('href', product.url);
-                $('body').find('.product-img').attr('src', product.image);
+                $('body').find('.product-img').attr('src', product_image);
                 $('body').find('.product-img').attr('alt', product.title);
 
                 if (typeof product.prices !== 'undefined' && product.prices && product.prices.length) {
